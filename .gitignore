@@ -1,0 +1,13 @@
+# Cache do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ambientes virtuais (caso decida usar depois)
+.venv/
+venv/
+ENV/
+
+# Arquivos do VS Code que não precisam subir
+.vscode/
