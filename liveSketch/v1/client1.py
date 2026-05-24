@@ -42,7 +42,8 @@ def receiveServerData(): #Função que recebe mensagens do servidor
             break
             
     print("* Thread de recepção encerrada. Pressione Enter para sair.")
-    socketC1.close()
+    try: socketC1.close()
+    except: pass
 
 serverReceiverThread = threading.Thread(target=receiveServerData, daemon=True) #daemon=True encerra a thread se o programa fechar
 serverReceiverThread.start()
@@ -71,5 +72,5 @@ while True: #Envia mensagens para o servidor
         break
 
 # Encerra o socket ao sair do loop
-socketC1.close()
-print("* Cliente finalizado.")
+try: socketC1.close()
+except: pass
