@@ -7,6 +7,8 @@ HOST = '0.0.0.0'
 PORT = 6666
 
 socketS1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #Socket IPv4 TCP
+socketS1.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) #Libera porta 6666 imediatamente
+
 socketS1.bind((HOST, PORT))
 socketS1.listen(2)  #Fila de espera para conexão de 2 players
 
@@ -16,7 +18,7 @@ print("* Aguardando a conexão dos dois jogadores.\n")
 players = [] #Armazena as conexões dos players
 role = ["actor", "observer"]
 
-#----------------------INICIANDO CONEXÕES------------------------------------------------------
+#----------------------INICIANDO CONEXÕES-----------------------------------------------------
 
 while len(players) < 2: #Loop de conexão para 2 jogadores
     socketC1, address = socketS1.accept()
@@ -43,16 +45,18 @@ def flowManager(sourceSocket, mainRole, destinationSocket): #Função executada 
                 break #Conexão encerrada quando não há dados
                 
             destinationSocket.sendall(data) #Repassa os dados recebidos do source para o destination
-            
+                     
         except ConnectionResetError: #Conexão encerrada por erro
             break
         except Exception as e:
             print(f"[ERRO] Ocorreu um problema na thread do {mainRole}: {e}")
             break 
+                
 
     print(f"[-] Conexão com o {mainRole} foi encerrada.")
     sourceSocket.close()
 
+#O servidor recebe data de um socket e envia para outro socket
 #---------------------------------------------------------------------------------------------
 
 actorThread = threading.Thread(

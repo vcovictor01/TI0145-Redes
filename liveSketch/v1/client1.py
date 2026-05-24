@@ -63,6 +63,9 @@ while True: #Envia mensagens para o servidor
             
         socketC1.sendall(msg.encode('utf-8'))
         
+    except OSError:
+        print("\n[-] Não foi possível enviar. Você foi desconectado.")
+        break
     except (KeyboardInterrupt, EOFError):
         # Captura Ctrl+C de forma limpa
         break
