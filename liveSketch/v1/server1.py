@@ -1,12 +1,12 @@
 import socket
 import threading
 
-#---------------------------------------------------------------------------------------------
+#---------------------INICIANDO SERVIDOR------------------------------------------------------
 
 HOST = '0.0.0.0'  
 PORT = 6666
 
-socketS1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+socketS1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #Socket IPv4 TCP
 socketS1.bind((HOST, PORT))
 socketS1.listen(2)  #Fila de espera para conexão de 2 players
 
@@ -16,7 +16,7 @@ print("* Aguardando a conexão dos dois jogadores.\n")
 players = [] #Armazena as conexões dos players
 role = ["actor", "observer"]
 
-#---------------------------------------------------------------------------------------------
+#----------------------INICIANDO CONEXÕES------------------------------------------------------
 
 while len(players) < 2: #Loop de conexão para 2 jogadores
     socketC1, address = socketS1.accept()
