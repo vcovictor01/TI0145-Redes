@@ -1,9 +1,10 @@
 import socket
 import threading
+import os 
 
 #---------------------------------------------------------------------------------------------
 
-SERVER_IP = 'localhost'  #IP REAL DO SERVIDRO 
+SERVER_IP = 'localhost'  #IP REAL DO SERVIDOR
 PORT = 6666
 
 socketC1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #Socket IPv4 TCP
@@ -42,8 +43,9 @@ def receiveServerData(): #Função que recebe mensagens do servidor
             break
             
     print("* Thread de recepção encerrada. Pressione Enter para sair.")
-    try: socketC1.close()
-    except: pass
+    socketC1.close()
+    
+    os._exit(0) 
 
 serverReceiverThread = threading.Thread(target=receiveServerData, daemon=True) #daemon=True encerra a thread se o programa fechar
 serverReceiverThread.start()
@@ -72,5 +74,4 @@ while True: #Envia mensagens para o servidor
         break
 
 # Encerra o socket ao sair do loop
-try: socketC1.close()
-except: pass
+socketC1.close()

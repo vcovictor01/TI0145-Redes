@@ -54,7 +54,11 @@ def flowManager(sourceSocket, mainRole, destinationSocket): #Função executada 
                 
 
     print(f"[-] Conexão com o {mainRole} foi encerrada.")
-    sourceSocket.close() 
+    
+    try: sourceSocket.close() #Quando um cliente fecha, os dois são encerrados
+    except: pass
+    try: destinationSocket.close()
+    except: pass
 
 
 #O servidor recebe data de um socket e envia para outro socket
