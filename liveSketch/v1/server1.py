@@ -46,7 +46,7 @@ def flowManager(sourceSocket, mainRole, destinationSocket): #Função executada 
                 
             destinationSocket.sendall(data) #Repassa os dados recebidos do source para o destination
                      
-        except ConnectionResetError: #Conexão encerrada por erro
+        except (ConnectionResetError, ConnectionAbortedError, OSError): #Conexão encerrada por erro
             break
         except Exception as e:
             print(f"[ERRO] Ocorreu um problema na thread do {mainRole}: {e}")
@@ -54,12 +54,8 @@ def flowManager(sourceSocket, mainRole, destinationSocket): #Função executada 
                 
 
     print(f"[-] Conexão com o {mainRole} foi encerrada.")
-    sourceSocket.close()
-    
-    try: sourceSocket.close() #se qualquer client encerrar, o servidor encerra também
-    except: pass
-    try: destinationSocket.close() 
-    except: pass
+    sourceSocket.close() 
+
 
 #O servidor recebe data de um socket e envia para outro socket
 #---------------------------------------------------------------------------------------------
