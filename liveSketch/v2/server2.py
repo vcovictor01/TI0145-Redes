@@ -53,12 +53,12 @@ def flowManager(sourceSocket, mainRole, destinationSocket): #Função executada 
             if not data: 
                 break #Conexão encerrada quando não há dados
             
-            try: destinationSocket.sendall(data.encode('utf-8'))
-            except: pass
-            
             #Checa se o dado recebido é a key
             comandos = data.split('\n')
             for comando in comandos:
+                if not comando.strip():
+                    continue
+                
                 if comando.startswith("MSG:"):
                     msg = comando.replace("MSG:", "").strip().lower()
                     
@@ -72,11 +72,19 @@ def flowManager(sourceSocket, mainRole, destinationSocket): #Função executada 
                         key = random.choice(KEYLIST)
                         keyMSG = f"NEW_WORD:{key}\n"
                         players[0].sendall(keyMSG.encode('utf-8'))
+                        continue
                     
                     elif msg == key and mainRole == "actor":
                         strikeMSG = f"SYSTEM:A MENSAGEM CONTÉM A RESPOSTA\n"
                         players[0].sendall(strikeMSG.encode('utf-8'))
-                     
+                        continue
+                
+                try: 
+                    destinationMSG = f"{comando}\n"
+                    destinationSocket.sendall(destinationMSG.encode('utf-8'))
+                except: 
+                    pass
+                
         except (ConnectionResetError, ConnectionAbortedError, OSError): #Conexão encerrada por erro
             break
         except Exception as e:
