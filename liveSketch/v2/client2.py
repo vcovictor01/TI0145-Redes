@@ -74,7 +74,7 @@ frameCANVA.pack(side=tk.LEFT, padx=10, pady=10)
 labelKey = tk.Label(frameCANVA, text="Aguardando Palavra...", fg="yellow", bg="#333333", font=("Arial", 14, "bold"))
 labelKey.pack(pady=5)
     #Canva efetivo
-canvas = tk.Canvas(frameCANVA, width=400, height=400, bg="white")
+canvas = tk.Canvas(frameCANVA, width=500, height=500, bg="white")
 canvas.pack()
     
 paintedPixels = {}
