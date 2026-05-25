@@ -63,7 +63,7 @@ def flowManager(sourceSocket, mainRole, destinationSocket): #Função executada 
                     msg = comando.replace("MSG:", "").strip().lower()
                     
                     if msg == key and mainRole == "observer":
-                        pointMSG = f"[SYSTEM] O Jogador acertou a palavra! {key}!\n"
+                        pointMSG = f"SYSTEM:O Jogador acertou a palavra! {key}!\n"
                         clearMSG = "CLEAR\n" #Comando para limpar canva
                         for p in players:
                             p.sendall(pointMSG.encode('utf-8'))
@@ -74,7 +74,7 @@ def flowManager(sourceSocket, mainRole, destinationSocket): #Função executada 
                         players[0].sendall(keyMSG.encode('utf-8'))
                     
                     elif msg == key and mainRole == "actor":
-                        strikeMSG = f"[SYSTEM] A MENSAGEM CONTÉM A RESPOSTA\n"
+                        strikeMSG = f"SYSTEM:A MENSAGEM CONTÉM A RESPOSTA\n"
                         players[0].sendall(strikeMSG.encode('utf-8'))
                      
         except (ConnectionResetError, ConnectionAbortedError, OSError): #Conexão encerrada por erro
