@@ -53,27 +53,29 @@ def flowManager(sourceSocket, mainRole, destinationSocket): #Função executada 
             if not data: 
                 break #Conexão encerrada quando não há dados
             
-            #Checa se o dado recebido é a key
-            if data.startswith("MSG:"):
-                msg = data.replace("MSG:", "").strip().lower()
-                
-                if msg == key and mainRole == "observer":
-                    pointMSG = f"[SYSTEM] O Jogador acertou a palavra! {key}!"
-                    for p in players:
-                        p.sendall(pointMSG.encode('utf-8'))
-                        p.sendall(b"CLEAR") #Comando para limpar o desenho
-                    
-                    key = random.choice(KEYLIST)
-                    keyMSG = f"NEW_WORD:{key}"
-                    players[0].sendall(keyMSG.encode('utf-8'))
-                    continue
-                
-                if msg == key and mainRole == "actor":
-                    strikeMSG = f"[SYSTEM] A MENSAGEM CONTÉM A RESPOSTA"
-                    players[0].sendall(strikeMSG.encode('utf-8'))
-                    continue
+            try: destinationSocket.sendall(data.encode('utf-8'))
+            except: pass
             
-            destinationSocket.sendall(data) #Repassa os dados recebidos do source para o destination
+            #Checa se o dado recebido é a key
+            comandos = data.split('\n')
+            for comando in comandos:
+                if comando.startswith("MSG:"):
+                    msg = comando.replace("MSG:", "").strip().lower()
+                    
+                    if msg == key and mainRole == "observer":
+                        pointMSG = f"[SYSTEM] O Jogador acertou a palavra! {key}!\n"
+                        clearMSG = "CLEAR\n" #Comando para limpar canva
+                        for p in players:
+                            p.sendall(pointMSG.encode('utf-8'))
+                            p.sendall(clearMSG.encode('utf-8'))
+                        
+                        key = random.choice(KEYLIST)
+                        keyMSG = f"NEW_WORD:{key}\n"
+                        players[0].sendall(keyMSG.encode('utf-8'))
+                    
+                    elif msg == key and mainRole == "actor":
+                        strikeMSG = f"[SYSTEM] A MENSAGEM CONTÉM A RESPOSTA\n"
+                        players[0].sendall(strikeMSG.encode('utf-8'))
                      
         except (ConnectionResetError, ConnectionAbortedError, OSError): #Conexão encerrada por erro
             break

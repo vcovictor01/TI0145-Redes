@@ -50,7 +50,7 @@ entry.pack(side=tk.LEFT, fill=tk.X, expand=True, ipady=4)
 def sendMessage(event=None): #Função para enviar mensagem
     texto = entry.get()
     if texto.strip():
-        socketC1.sendall(f"MSG:{texto}".encode('utf-8'))
+        socketC1.sendall(f"MSG:{texto}\n".encode('utf-8'))
         
         #Mostra mensagem enviada
         containerCHAT.configure(state='normal')
@@ -97,7 +97,7 @@ def paint(event):
                                         (coluna+1)*pencilSize, (linha+1)*pencilSize, 
                                         fill=pencil, outline="#e0e0e0") #Desenha localmente
                 
-                paintDATA = f"PAINT:{coluna},{linha},{bitColor}"
+                paintDATA = f"PAINT:{coluna},{linha},{bitColor}\n"
                 socketC1.sendall(paintDATA.encode('utf-8')) #Envia qual pixel foi desenhado
          
                 
@@ -131,31 +131,37 @@ def receiveServerData(): #Função que recebe mensagens do servidor
             
             if not data:
                 break
+            
+            comandos = data.split('\n')
+            
+            for comando in comandos:
+                if not comando.strip(): # Ignora pedaços vazios
+                    continue
                 
-            if data.startswith("MSG:"): #Mensagens do Chat
-                msg = data.replace("MSG:", "")
+            if comando.startswith("MSG:"): #Mensagens do Chat
+                msg = comando.replace("MSG:", "")
                 containerCHAT.configure(state='normal')
                 containerCHAT.insert(tk.END, f"Jogador: {msg}\n")
                 containerCHAT.configure(state='disabled')
                 containerCHAT.see(tk.END)
                 
-            elif data.startswith("SYSTEM:"): #Mensagens de Sistema
-                sys = data.replace("SYSTEM:", "")
+            elif comando.startswith("SYSTEM:"): #Mensagens de Sistema
+                sys = comando.replace("SYSTEM:", "")
                 containerCHAT.configure(state='normal')
                 containerCHAT.insert(tk.END, f"[SISTEMA] {sys}\n", "sistema")
                 containerCHAT.tag_config("sistema", foreground="orange", font=("Arial", 10, "bold"))
                 containerCHAT.configure(state='disabled')
                 containerCHAT.see(tk.END)
                 
-            elif data.startswith("NEW_WORD:"): #KEY para o actor
-                palavra = data.split(":")[1]
+            elif comando.startswith("NEW_WORD:"): #KEY para o actor
+                palavra = comando.split(":")[1]
                 labelKey.configure(text=f"{palavra.upper()}")
                 
-            elif data.startswith("PAINT:"): #Desenho Remoto para o observer
-                paint = data.split(":")[1].split(",")
-                col = int(paint[0])
-                lin = int(paint[1]) #Divide o dado de desenhar em três parte (pixelcol, pixellin, color)
-                color = "black" if paint[2] == "1" else "white"
+            elif comando.startswith("PAINT:"): #Desenho Remoto para o observer
+                pt = comando.split(":")[1].split(",")
+                col = int(pt[0])
+                lin = int(pt[1]) #Divide o dado de desenhar em três parte (pixelcol, pixellin, color)
+                color = "black" if pt[2] == "1" else "white"
                 
                 canvas.create_rectangle(col*pencilSize, lin*pencilSize, 
                                         (col+1)*pencilSize, (lin+1)*pencilSize, 
