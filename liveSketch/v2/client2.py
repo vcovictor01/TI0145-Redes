@@ -138,39 +138,39 @@ def receiveServerData(): #Função que recebe mensagens do servidor
                 if not comando.strip(): # Ignora pedaços vazios
                     continue
                 
-            if comando.startswith("MSG:"): #Mensagens do Chat
-                msg = comando.replace("MSG:", "")
-                containerCHAT.configure(state='normal')
-                containerCHAT.insert(tk.END, f"Jogador: {msg}\n")
-                containerCHAT.configure(state='disabled')
-                containerCHAT.see(tk.END)
+                if comando.startswith("MSG:"): #Mensagens do Chat
+                    msg = comando.replace("MSG:", "")
+                    containerCHAT.configure(state='normal')
+                    containerCHAT.insert(tk.END, f"Jogador: {msg}\n")
+                    containerCHAT.configure(state='disabled')
+                    containerCHAT.see(tk.END)
+                    
+                elif comando.startswith("SYSTEM:"): #Mensagens de Sistema
+                    sys = comando.replace("SYSTEM:", "")
+                    containerCHAT.configure(state='normal')
+                    containerCHAT.insert(tk.END, f"[SISTEMA] {sys}\n", "sistema")
+                    containerCHAT.tag_config("sistema", foreground="orange", font=("Arial", 10, "bold"))
+                    containerCHAT.configure(state='disabled')
+                    containerCHAT.see(tk.END)
+                    
+                elif comando.startswith("NEW_WORD:"): #KEY para o actor
+                    palavra = comando.split(":")[1]
+                    labelKey.configure(text=f"{palavra.upper()}")
+                    
+                elif comando.startswith("PAINT:"): #Desenho Remoto para o observer
+                    pt = comando.split(":")[1].split(",")
+                    col = int(pt[0])
+                    lin = int(pt[1]) #Divide o dado de desenhar em três parte (pixelcol, pixellin, color)
+                    color = "black" if pt[2] == "1" else "white"
+                    
+                    canvas.create_rectangle(col*pencilSize, lin*pencilSize, 
+                                            (col+1)*pencilSize, (lin+1)*pencilSize, 
+                                            fill=color, outline="#e0e0e0")
                 
-            elif comando.startswith("SYSTEM:"): #Mensagens de Sistema
-                sys = comando.replace("SYSTEM:", "")
-                containerCHAT.configure(state='normal')
-                containerCHAT.insert(tk.END, f"[SISTEMA] {sys}\n", "sistema")
-                containerCHAT.tag_config("sistema", foreground="orange", font=("Arial", 10, "bold"))
-                containerCHAT.configure(state='disabled')
-                containerCHAT.see(tk.END)
-                
-            elif comando.startswith("NEW_WORD:"): #KEY para o actor
-                palavra = comando.split(":")[1]
-                labelKey.configure(text=f"{palavra.upper()}")
-                
-            elif comando.startswith("PAINT:"): #Desenho Remoto para o observer
-                pt = comando.split(":")[1].split(",")
-                col = int(pt[0])
-                lin = int(pt[1]) #Divide o dado de desenhar em três parte (pixelcol, pixellin, color)
-                color = "black" if pt[2] == "1" else "white"
-                
-                canvas.create_rectangle(col*pencilSize, lin*pencilSize, 
-                                        (col+1)*pencilSize, (lin+1)*pencilSize, 
-                                        fill=color, outline="#e0e0e0")
-            
-            # Comando de limpar a tela após acerto
-            elif data == "CLEAR":
-                canvas.delete("all")
-                paintedPixels.clear()
+                # Comando de limpar a tela após acerto
+                elif comando == "CLEAR":
+                    canvas.delete("all")
+                    paintedPixels.clear()
             
         except:
             break
