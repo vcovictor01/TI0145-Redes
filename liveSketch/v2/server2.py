@@ -37,7 +37,7 @@ print("\n[SYSTEM] Conexão concluída! Iniciando threads de comunicação.")
 #---------------------------------------------------------------------------------------------
 #DEFININDO KEY
 
-KEYLIST = ["gato", "carro", "casa", "arvore", "sol", "computador", "garrafa"]
+KEYLIST = ["casa", "arvore", "sol", "computador", "espada", "fantasma"]
 key = random.choice(KEYLIST)
 keyMSG = f"NEW_WORD:{key}"
 players[0].sendall(keyMSG.encode('utf-8'))
