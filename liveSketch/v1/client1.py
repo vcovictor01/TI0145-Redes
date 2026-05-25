@@ -33,7 +33,7 @@ def receiveServerData(): #Função que recebe mensagens do servidor
                 print("\n- O servidor encerrou a sessão.")
                 break
                 
-            print(f"m {data}")
+            print(f"> {data}")
             
         except (ConnectionResetError, ConnectionAbortedError):
             print("\n- Conexão com o servidor foi perdida abruptamente.")
