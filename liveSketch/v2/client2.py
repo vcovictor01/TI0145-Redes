@@ -7,7 +7,7 @@ from tkinter import scrolledtext
 #---------------------------------------------------------------------------------------------
 #INICIALIZANDO CONEXÃO
 
-SERVER_IP = 'localhost'  #IP REAL DO SERVIDOR
+SERVER_IP = '10.72.194.88'  #IP REAL DO SERVIDOR
 PORT = 6666
 
 socketC1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #Socket IPv4 TCP
